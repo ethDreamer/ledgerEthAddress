@@ -31,14 +31,8 @@ COINSRCS = \
 	secp256k1_openssl.cpp \
 	hdkeys.cpp
 
-
 COINOBJS=\
 	$(addprefix $(OBJDIR)/CoinCore/, $(COINSRCS:.cpp=.o))
-
-#COINOBJS= \
-#	$(COINDIR)/obj/secp256k1_openssl.o \
-#	$(COINDIR)/obj/keccak.o \
-#	$(COINDIR)/obj/hdkeys.o
 
 all: bin/btchip_getEtherPublicKey bin/hdkeychain bin/getLedgerAddresses
 
@@ -71,10 +65,8 @@ $(OBJDIR)/btchip/%.o: $(BTCHDIR)/%.c
 
 $(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp: $(ROOTDIR)/symlinks.sh $(ROOTDIR)/hdkeychain.patch
 	cd $(ROOTDIR) && git clone https://github.com/ciphrex/mSIGNA.git && patch -p0 < ./hdkeychain.patch && ./symlinks.sh && cd ..
-
 $(COINDIR)/%.cpp: $(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp
 	
-
 $(OBJDIR)/CoinCore/%.o: $(COINDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -I$(COININC) -o $@ -c $<
 
