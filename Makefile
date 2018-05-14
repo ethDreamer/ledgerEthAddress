@@ -58,6 +58,12 @@ $(ROOTDIR)/getLedgerCmdline.c: $(ROOTDIR)/gengetopt/getLedgerAddresses_cmd.ggo
 $(ROOTDIR)/getLedgerCmdline.h: $(ROOTDIR)/gengetopt/getLedgerAddresses_cmd.ggo
 	gengetopt -i $< -F getLedgerCmdline --include-getopt --output-dir=$(ROOTDIR)
 
+$(BTCHDIR)/%.c: $(ROOTDIR)/btchip.patch $(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp
+	cd $(ROOTDIR) && git clone https://github.com/LedgerHQ/btchip-c-api && patch -p0 < ./btchip.patch && cd ..
+
+$(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp: $(ROOTDIR)/symlinks.sh $(ROOTDIR)/hdkeychain.patch
+	cd $(ROOTDIR) && git clone https://github.com/ciphrex/mSIGNA.git && patch -p0 < ./hdkeychain.patch && ./symlinks.sh && cd ..
+
 $(OBJDIR)/btchip/%.o: $(BTCHDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -73,11 +79,7 @@ $(OBJDIR)/CoinCore/keccak.o: $(COINDIR)/hashfunc/keccak.c
 clean:
 	rm -rf bin/* $(OBJDIR)/*.o $(OBJDIR)/btchip/*.o $(OBJDIR)/CoinCore/*.o
 
+#	prevents make from deleting the source files after compiling
+.SECONDARY:	$(addprefix $(BTCHDIR)/, $(BTSRCS)) $(addprefix $(COINDIR)/, $(COINSRCS))
 
-.SECONDARY:
 
-$(BTCHDIR)/%.c: $(ROOTDIR)/btchip.patch $(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp
-	cd $(ROOTDIR) && git clone https://github.com/LedgerHQ/btchip-c-api && patch -p0 < ./btchip.patch && cd ..
-
-$(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp: $(ROOTDIR)/symlinks.sh $(ROOTDIR)/hdkeychain.patch
-	cd $(ROOTDIR) && git clone https://github.com/ciphrex/mSIGNA.git && patch -p0 < ./hdkeychain.patch && ./symlinks.sh && cd ..
