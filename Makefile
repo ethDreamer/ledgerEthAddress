@@ -34,6 +34,7 @@ COINSRCS = \
 COINOBJS=\
 	$(addprefix $(OBJDIR)/CoinCore/, $(COINSRCS:.cpp=.o))
 
+
 all: bin/btchip_getEtherPublicKey bin/hdkeychain bin/getLedgerAddresses
 
 bin/btchip_getEtherPublicKey: $(ROOTDIR)/btchip_getEtherPublicKey.c $(BTOBJS)
@@ -57,14 +58,9 @@ $(ROOTDIR)/getLedgerCmdline.c: $(ROOTDIR)/gengetopt/getLedgerAddresses_cmd.ggo
 $(ROOTDIR)/getLedgerCmdline.h: $(ROOTDIR)/gengetopt/getLedgerAddresses_cmd.ggo
 	gengetopt -i $< -F getLedgerCmdline --include-getopt --output-dir=$(ROOTDIR)
 
-$(BTCHDIR)/%.c: $(ROOTDIR)/btchip.patch $(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp
-	cd $(ROOTDIR) && git clone https://github.com/LedgerHQ/btchip-c-api && patch -p0 < ./btchip.patch && cd ..
-
 $(OBJDIR)/btchip/%.o: $(BTCHDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp: $(ROOTDIR)/symlinks.sh $(ROOTDIR)/hdkeychain.patch
-	cd $(ROOTDIR) && git clone https://github.com/ciphrex/mSIGNA.git && patch -p0 < ./hdkeychain.patch && ./symlinks.sh && cd ..
 $(COINDIR)/%.cpp: $(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp
 	
 $(OBJDIR)/CoinCore/%.o: $(COINDIR)/%.cpp
@@ -76,3 +72,12 @@ $(OBJDIR)/CoinCore/keccak.o: $(COINDIR)/hashfunc/keccak.c
 
 clean:
 	rm -rf bin/* $(OBJDIR)/*.o $(OBJDIR)/btchip/*.o $(OBJDIR)/CoinCore/*.o
+
+
+.SECONDARY:
+
+$(BTCHDIR)/%.c: $(ROOTDIR)/btchip.patch $(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp
+	cd $(ROOTDIR) && git clone https://github.com/LedgerHQ/btchip-c-api && patch -p0 < ./btchip.patch && cd ..
+
+$(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp: $(ROOTDIR)/symlinks.sh $(ROOTDIR)/hdkeychain.patch
+	cd $(ROOTDIR) && git clone https://github.com/ciphrex/mSIGNA.git && patch -p0 < ./hdkeychain.patch && ./symlinks.sh && cd ..
