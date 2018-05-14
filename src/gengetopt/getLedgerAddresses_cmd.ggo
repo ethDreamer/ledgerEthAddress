@@ -1,0 +1,10 @@
+package "getLedgerAddresses"
+version "1.0"
+purpose "Displays ETH addresses derived from a given key path"
+
+# Options
+option  "keypath"		k	"key path in a/b/c format using n' for hardened nodes"	string	default="44'/60'/0'"    optional
+option  "confirm"		c	"Confirm addresses on Ledger"							flag	off
+option  "start"         s   "Starting address index to display"						int		default="0"				optional
+option	"addresses"		a	"Number of derived addresses to display"				int		default="5"				optional
+

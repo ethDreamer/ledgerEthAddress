@@ -1,0 +1,89 @@
+diff -bu -r '--exclude=.git*' ./btchip-c-api/btchipArgs.h ./btchip.modified/btchipArgs.h
+--- ./btchip-c-api/btchipArgs.h	2018-05-14 11:46:39.693626241 -0500
++++ ./btchip.modified/btchipArgs.h	2018-02-21 19:03:50.707988641 -0600
+@@ -33,10 +33,19 @@
+ 
+ #define MAX_BIP32_PATH 10
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++
+ int convertMode(char *mode);
+ int convertOption(char *option);
+ int convertChain(char *chain);
+ int convertPos(char *pos);
+ int convertPath(char *path, unsigned int *pathBinary);
+ 
++#ifdef __cplusplus
++}
++#endif
++
++
+ #endif
+diff -bu -r '--exclude=.git*' ./btchip-c-api/btchipUtils.h ./btchip.modified/btchipUtils.h
+--- ./btchip-c-api/btchipUtils.h	2018-05-14 11:46:39.693626241 -0500
++++ ./btchip.modified/btchipUtils.h	2018-02-21 19:04:25.767986772 -0600
+@@ -23,9 +23,17 @@
+ #include <inttypes.h>
+ #include "bitcoinTransaction.h"
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++
+ unsigned char* writeUint32BE(unsigned char *buffer, uint32_t value);
+ unsigned char* writeUint32LE(unsigned char *buffer, uint32_t value);
+ bitcoinTransaction* parseTransactionStringWithIndex(char *transaction, uint32_t *index);
+ 
++#ifdef __cplusplus
++}
++#endif
++
+ #endif
+ 
+diff -bu -r '--exclude=.git*' ./btchip-c-api/dongleComm.h ./btchip.modified/dongleComm.h
+--- ./btchip-c-api/dongleComm.h	2018-05-14 11:46:39.694626241 -0500
++++ ./btchip.modified/dongleComm.h	2018-02-21 19:03:21.963990174 -0600
+@@ -24,6 +24,10 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++
+ struct dongleHandleInternal;
+ typedef struct dongleHandleInternal* dongleHandle;
+ 
+@@ -33,5 +37,9 @@
+ dongleHandle getFirstDongle();
+ void closeDongle(dongleHandle handle);
+ 
++#ifdef __cplusplus
++}
++#endif
++
+ #endif
+ 
+diff -bu -r '--exclude=.git*' ./btchip-c-api/hexUtils.h ./btchip.modified/hexUtils.h
+--- ./btchip-c-api/hexUtils.h	2018-05-14 11:46:39.695626241 -0500
++++ ./btchip.modified/hexUtils.h	2018-02-21 19:02:49.734991893 -0600
+@@ -24,9 +24,17 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++
+ size_t hexToBin(const char *data, unsigned char *out, size_t outLength);
+ void displayBinary(unsigned char *buffer, size_t length);
+ 
++#ifdef __cplusplus
++}
++#endif
++
+ #endif
+ 
+ 

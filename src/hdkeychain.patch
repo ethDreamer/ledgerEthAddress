@@ -1,0 +1,59 @@
+--- ./mSIGNA/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp	2018-05-14 11:55:32.563611220 -0500
++++ ./mSIGNA.mod/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp	2018-05-14 12:06:12.116593191 -0500
+@@ -1,8 +1,8 @@
+ #include <iostream>
+ #include <cassert>
+-
+-#include <hdkeys.h>
+-#include <Base58Check.h>
++#include "CoinCore/hdkeys.h"
++#include "hashfunc/sph_keccak.h"
++#include "../../../../../displayChildren.h"
+ 
+ #include <sstream>
+ 
+@@ -11,36 +11,18 @@
+ 
+ int main(int argc, char* argv[])
+ {
+-    if (argc < 3) {
+-        cout << "Usage: " << argv[0] << " <extended key> <child num> [extended = 0]" << endl;
++    if (argc < 2) {
++        cout << "Usage: " << argv[0] << " <public key> <chain code>" << endl; // <extended key> <child num> [extended = 0]" << endl;
+         return 0;
+     }
+ 
+-    try {
+-        uchar_vector extkey;
+-        if (!fromBase58Check(argv[1], extkey))
+-            throw runtime_error("Invalid extended key.");
+-
+-        uint32_t childnum = strtoull(argv[2], NULL, 0);
+-
+-        bool bExtended = argc > 3 && strtol(argv[3], NULL, 0);
+-
+-        HDKeychain hdkeychain(extkey);
+-        hdkeychain = hdkeychain.getChild(childnum);
++    uchar_vector p, cc;
++    std::string pubKeyHex = argv[1];
++    std::string chaincode = argv[2];
++    p.setHex(pubKeyHex);
++    cc.setHex(chaincode);
+ 
+-        if (bExtended)
+-        {
+-            cout << toBase58Check(hdkeychain.extkey()) << endl;
+-        }
+-        else
+-        {
+-            cout << uchar_vector(hdkeychain.key()).getHex() << endl;
+-        }
+-    }
+-    catch (const exception& e) {
+-        cerr << "Error: " << e.what() << endl;
+-        return -1;
+-    }
++    displayChildren(p, cc);
+  
+     return 0;
+ }
