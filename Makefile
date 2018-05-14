@@ -57,7 +57,7 @@ $(ROOTDIR)/getLedgerCmdline.c: $(ROOTDIR)/gengetopt/getLedgerAddresses_cmd.ggo
 $(ROOTDIR)/getLedgerCmdline.h: $(ROOTDIR)/gengetopt/getLedgerAddresses_cmd.ggo
 	gengetopt -i $< -F getLedgerCmdline --include-getopt --output-dir=$(ROOTDIR)
 
-$(BTCHDIR)/%.c: $(ROOTDIR)/btchip.patch
+$(BTCHDIR)/%.c: $(ROOTDIR)/btchip.patch $(MSIGDIR)/deps/CoinCore/examples/hdkeychain/hdkeychain.cpp
 	cd $(ROOTDIR) && git clone https://github.com/LedgerHQ/btchip-c-api && patch -p0 < ./btchip.patch && cd ..
 
 $(OBJDIR)/btchip/%.o: $(BTCHDIR)/%.c
